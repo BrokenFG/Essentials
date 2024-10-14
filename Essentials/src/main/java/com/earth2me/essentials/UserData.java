@@ -801,6 +801,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
      * Start the cooldown for a specific command.
      */
     public void startCooldown(String commandType) {
+        if (getBase().hasPermission("essentials.cooldowns.bypass")) return;
         holder.cooldowns().put(commandType, System.currentTimeMillis());
         config.save();
     }
@@ -821,6 +822,7 @@ public abstract class UserData extends PlayerExtension implements IConf {
     }
 
     public void setTimer(String commandType) {
+        if (getBase().hasPermission("essentials.timers.bypass")) return;
         holder.timers().put(commandType, System.currentTimeMillis() + getDisableDelayFromConfig(commandType) * 1000);
     }
 
