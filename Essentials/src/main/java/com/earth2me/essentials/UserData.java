@@ -865,6 +865,13 @@ public abstract class UserData extends PlayerExtension implements IConf {
                         return 0;
                     }
                     break;
+                case "speed":
+                    if (getBase().getFlySpeed() == 0.1f && getBase().getWalkSpeed() == 0.2f) {
+                        holder.timers().remove(commandType); // Remove the timer once it's expired
+                        config.save();
+                        return 0;
+                    }
+                    break;
                 case "socialspy":
                     if (!isSocialSpyEnabled()) {
                         holder.timers().remove(commandType); // Remove the timer once it's expired
