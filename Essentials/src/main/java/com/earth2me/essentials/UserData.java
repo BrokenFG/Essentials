@@ -849,6 +849,30 @@ public abstract class UserData extends PlayerExtension implements IConf {
             holder.timers().remove(commandType); // Remove the timer once it's expired
             config.save();
             return 0;
+        } else if (disableTime != null) {
+            switch (commandType) {
+                case "god":
+                    if (!isGodModeEnabled()) {
+                        holder.timers().remove(commandType); // Remove the timer once it's expired
+                        config.save();
+                        return 0;
+                    }
+                    break;
+                case "fly":
+                    if (!getBase().getAllowFlight()) {
+                        holder.timers().remove(commandType); // Remove the timer once it's expired
+                        config.save();
+                        return 0;
+                    }
+                    break;
+                case "socialspy":
+                    if (!isSocialSpyEnabled()) {
+                        holder.timers().remove(commandType); // Remove the timer once it's expired
+                        config.save();
+                        return 0;
+                    } // Implement repair disable logic here
+                    break;
+            }
         }
         return disableTime == null ? 0 : disableTime;
     }
