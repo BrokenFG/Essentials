@@ -349,4 +349,18 @@ public interface IUser {
     boolean isFreeze();
 
     void setFreeze(boolean freeze);
+
+    boolean isOnCooldown(String commandType);
+
+    boolean isCooldownExists(String commandType);
+
+    long getCooldown(String commandType);
+
+    void startCooldown(String commandType);
+
+    void setTimer(String commandType);
+
+    long checkTimer(String commandType);
+
+    boolean isTimerExists(String commandType);
 }

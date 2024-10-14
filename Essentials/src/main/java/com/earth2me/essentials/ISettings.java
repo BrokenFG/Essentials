@@ -1,6 +1,7 @@
 package com.earth2me.essentials;
 
 import com.earth2me.essentials.commands.IEssentialsCommand;
+import com.earth2me.essentials.config.EssentialsConfiguration;
 import com.earth2me.essentials.signs.EssentialsSign;
 import com.earth2me.essentials.textreader.IText;
 import net.kyori.adventure.text.minimessage.tag.Tag;
@@ -19,6 +20,8 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public interface ISettings extends IConf {
+    EssentialsConfiguration getConfiguration();
+
     File getConfigFile();
 
     boolean areSignsDisabled();

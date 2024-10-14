@@ -2,6 +2,7 @@ package com.earth2me.essentials.commands;
 
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
+import com.earth2me.essentials.utils.DateUtil;
 import com.google.common.collect.Lists;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -55,6 +56,13 @@ public abstract class EssentialsToggleCommand extends EssentialsCommand {
                 continue;
             }
             foundUser = true;
+            if (sender.getUser() != null && !player.getName().equalsIgnoreCase(sender.getSender().getName())){
+                if (sender.getUser().isOnCooldown(getName() + ".others")) {
+                    final String commandCooldownTime = DateUtil.formatDateDiff(sender.getUser().getCooldown(getName() + ".others"));
+                    sender.sendTl("commandCooldown", commandCooldownTime);
+                    return;
+                }
+            }
             if (args.length > 1) {
                 final Boolean toggle = matchToggleArgument(args[1]);
                 togglePlayer(sender, player, toggle);

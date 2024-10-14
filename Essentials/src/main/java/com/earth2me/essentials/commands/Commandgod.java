@@ -26,6 +26,7 @@ public class Commandgod extends EssentialsToggleCommand {
         if (enabled == null) {
             enabled = !user.isGodModeEnabled();
         }
+        if (checkCooldown(sender, user)) return;
 
         final GodStatusChangeEvent godEvent = new GodStatusChangeEvent(user, sender.isPlayer() ? ess.getUser(sender.getPlayer()) : null, enabled);
         ess.getServer().getPluginManager().callEvent(godEvent);
@@ -41,6 +42,7 @@ public class Commandgod extends EssentialsToggleCommand {
             if (!sender.isPlayer() || !sender.getPlayer().equals(user.getBase())) {
                 sender.sendTl("godMode", CommonPlaceholders.enableDisable(user.getSource(), enabled));
             }
+            startCooldown(sender, user);
         }
     }
 }

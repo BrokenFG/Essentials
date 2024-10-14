@@ -784,4 +784,79 @@ public abstract class UserData extends PlayerExtension implements IConf {
     public Map<String, Object> getConfigMap(final String node) {
         return ConfigurateUtil.getRawMap(config.getSection("info." + node));
     }
+
+    public boolean isOnCooldown(String commandType) {
+        final Long lastUsed = holder.cooldowns().get(commandType);
+        if (lastUsed == null) {
+            return false;
+        }
+        return (System.currentTimeMillis() - lastUsed) < getCooldownFromConfig(commandType) * 1000;
+    }
+
+    public long getCooldown(String commandType) {
+        return holder.cooldowns().get(commandType) + getCooldownFromConfig(commandType) * 1000;
+    }
+
+    /**
+     * Start the cooldown for a specific command.
+     */
+    public void startCooldown(String commandType) {
+        holder.cooldowns().put(commandType, System.currentTimeMillis());
+        config.save();
+    }
+
+    public boolean isCooldownExists(String commandType) {
+        return ess.getSettings().getConfiguration().getLong("cooldowns." + commandType, 0) > 0;
+    }
+
+    /**
+     * Get the cooldown time from the config file, or return a default value.
+     */
+    private long getCooldownFromConfig(String commandType) {
+        return ess.getSettings().getConfiguration().getLong("cooldowns." + commandType, 0);
+    }
+
+    public boolean isTimerExists(String commandType) {
+        return ess.getSettings().getConfiguration().getLong("timers." + commandType + ".timer", 0) > 0;
+    }
+
+    public void setTimer(String commandType) {
+        holder.timers().put(commandType, System.currentTimeMillis() + getDisableDelayFromConfig(commandType) * 1000);
+    }
+
+    /**
+     * Check if a timer has expired for a given command, and auto-disable if needed.
+     */
+    public long checkTimer(String commandType) {
+        final Long disableTime = holder.timers().get(commandType);
+        if (disableTime != null && System.currentTimeMillis() > disableTime) {
+            switch (commandType) {
+                case "god":
+                    setGodModeEnabled(false);
+                    break;
+                case "fly":
+                    getBase().setAllowFlight(false);
+                    getBase().setFallDistance(0f);
+                    break;
+                case "socialspy":
+                    setSocialSpyEnabled(false); // Implement repair disable logic here
+                    break;
+                case "speed":
+                    getBase().setWalkSpeed(0.2f);
+                    getBase().setFlySpeed(0.1f);
+                    break;
+            }
+            holder.timers().remove(commandType); // Remove the timer once it's expired
+            config.save();
+            return 0;
+        }
+        return disableTime == null ? 0 : disableTime;
+    }
+
+    /**
+     * Get the auto-disable delay from the config file, or use a default value.
+     */
+    private long getDisableDelayFromConfig(String commandType) {
+        return ess.getSettings().getConfiguration().getLong("timers." + commandType + ".timer", 0);
+    }
 }

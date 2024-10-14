@@ -3,6 +3,7 @@ package com.earth2me.essentials.commands;
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.User;
 import com.earth2me.essentials.utils.AdventureUtil;
+import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FloatUtil;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -51,6 +52,8 @@ public class Commandspeed extends EssentialsCommand {
             }
         }
 
+        if (checkCooldown(user, "speed.self")) return;
+
         if (isFly) {
             user.getBase().setFlySpeed(getRealMoveSpeed(speed, true, isBypass));
             user.sendTl("moveSpeed", AdventureUtil.parsed(user.playerTl("flying")), speed, user.getDisplayName());
@@ -70,6 +73,13 @@ public class Commandspeed extends EssentialsCommand {
                 continue;
             }
             foundUser = true;
+            if (!player.getName().equalsIgnoreCase(sender.getSender().getName())){
+                if (sender.getUser() != null && sender.getUser().isOnCooldown(getName() + ".others")) {
+                    final String commandCooldownTime = DateUtil.formatDateDiff(sender.getUser().getCooldown(getName() + ".others"));
+                    sender.sendTl("commandCooldown", commandCooldownTime);
+                    return;
+                }
+            }
             if (isFly) {
                 matchPlayer.setFlySpeed(getRealMoveSpeed(speed, true, isBypass));
                 sender.sendTl("moveSpeed", AdventureUtil.parsed(sender.tl("flying")), speed, matchPlayer.getDisplayName());
@@ -77,6 +87,7 @@ public class Commandspeed extends EssentialsCommand {
                 matchPlayer.setWalkSpeed(getRealMoveSpeed(speed, false, isBypass));
                 sender.sendTl("moveSpeed", AdventureUtil.parsed(sender.tl("walking")), speed, matchPlayer.getDisplayName());
             }
+            startCooldown(sender, player);
         }
         if (!foundUser) {
             throw new PlayerNotFoundException();

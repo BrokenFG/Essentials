@@ -5,6 +5,7 @@ import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.IEssentialsModule;
 import com.earth2me.essentials.Trade;
 import com.earth2me.essentials.User;
+import com.earth2me.essentials.utils.DateUtil;
 import com.earth2me.essentials.utils.FormatUtil;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -340,5 +341,61 @@ public abstract class EssentialsCommand implements IEssentialsCommand {
             return false;
         });
         return future;
+    }
+
+    public boolean checkCooldown(CommandSource sender, User user) {
+        return checkCooldown(sender, user, getName() + ".self");
+    }
+
+    public boolean checkCooldown(User user) {
+        return checkCooldown(user, getName());
+    }
+
+    public void startCooldown(CommandSource sender, User user) {
+        startCooldown(sender, user, getName());
+    }
+
+    public void startCooldown(User user) {
+        startCooldown(user, getName());
+    }
+
+    public boolean checkCooldown(CommandSource sender, User user, String command) {
+        if (sender.isPlayer() && sender.getPlayer().equals(user.getBase())) {
+            if (sender.getUser().isOnCooldown(command)) {
+                final String commandCooldownTime = DateUtil.formatDateDiff(sender.getUser().getCooldown(command));
+                sender.sendTl("commandCooldown", commandCooldownTime);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkCooldown(User user, String command) {
+        if (user.isOnCooldown(command)) {
+            final String commandCooldownTime = DateUtil.formatDateDiff(user.getCooldown(command));
+            user.sendTl("commandCooldown", commandCooldownTime);
+            return true;
+        }
+        return false;
+    }
+
+    public void startCooldown(CommandSource sender, User user, String command) {
+        if (sender.isPlayer()) {
+            if (!sender.getPlayer().equals(user.getBase())) {
+                sender.getUser().startCooldown( command + ".others");
+            } else {
+                sender.getUser().startCooldown(command + ".self");
+            }
+        }
+        if (user.isTimerExists(command)) {
+            user.setTimer(command);
+        }
+    }
+
+    public void startCooldown(User user, String command) {
+        user.startCooldown(command);
+        if (user.isTimerExists(command)) {
+            user.setTimer(command);
+        }
     }
 }

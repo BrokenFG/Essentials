@@ -50,7 +50,7 @@ public class Commandenchant extends EssentialsCommand {
                 throw new NotEnoughArgumentsException();
             }
         }
-
+        if (checkCooldown(user)) return;
         final MetaItemStack metaStack = new MetaItemStack(stack);
         final Enchantment enchantment = metaStack.getEnchantment(user, args[0]);
         metaStack.addEnchantment(user.getSource(), ess.getSettings().allowUnsafeEnchantments() && user.isAuthorized("essentials.enchantments.allowunsafe"), enchantment, level);
@@ -62,6 +62,7 @@ public class Commandenchant extends EssentialsCommand {
         } else {
             user.sendTl("enchantmentApplied", enchantName);
         }
+        startCooldown(user);
     }
 
     @Override

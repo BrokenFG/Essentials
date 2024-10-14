@@ -356,6 +356,34 @@ public class UserConfigHolder {
         this.pastUsernames = value;
     }
 
+    @DeleteOnEmpty
+    private @MonotonicNonNull Map<String, Long> timers;
+
+    public Map<String, Long> timers() {
+        if (this.timers == null) {
+            this.timers = new HashMap<>();
+        }
+        return this.timers;
+    }
+
+    public void timers(final Map<String, Long> value) {
+        this.timers = value;
+    }
+
+    @DeleteOnEmpty
+    private @MonotonicNonNull Map<String, Long> cooldowns;
+
+    public Map<String, Long> cooldowns() {
+        if (this.cooldowns == null) {
+            this.cooldowns = new HashMap<>();
+        }
+        return this.cooldowns;
+    }
+
+    public void cooldowns(final Map<String, Long> value) {
+        this.cooldowns = value;
+    }
+
     private @NonNull Timestamps timestamps = new Timestamps();
 
     public Timestamps timestamps() {

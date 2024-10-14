@@ -48,6 +48,8 @@ public class Commandrepair extends EssentialsCommand {
             throw new TranslatableException("repairEnchanted");
         }
 
+        if (checkCooldown(user, "repair.hand")) return;
+
         final String itemName = item.getType().toString().toLowerCase(Locale.ENGLISH);
         final Trade charge = getCharge(item.getType());
 
@@ -58,10 +60,12 @@ public class Commandrepair extends EssentialsCommand {
         charge.charge(user);
         user.getBase().updateInventory();
         user.sendTl("repair", itemName.replace('_', ' '));
+        startCooldown(user, "repair.hand");
     }
 
     public void repairAll(final User user) throws Exception {
         final List<String> repaired = new ArrayList<>();
+        if (checkCooldown(user, "repair.all")) return;
         repairItems(Inventories.getInventory(user.getBase(), false), user, repaired);
 
         if (user.isAuthorized("essentials.repair.armor")) {
@@ -72,6 +76,7 @@ public class Commandrepair extends EssentialsCommand {
         if (repaired.isEmpty()) {
             throw new TranslatableException("repairNone");
         } else {
+            startCooldown(user, "repair.all");
             user.sendTl("repair", StringUtil.joinList(repaired));
         }
     }

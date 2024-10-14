@@ -154,6 +154,11 @@ public class Settings implements net.ess3.api.ISettings {
     }
 
     @Override
+    public EssentialsConfiguration getConfiguration() {
+        return config;
+    }
+
+    @Override
     public File getConfigFile() {
         return config.getFile();
     }

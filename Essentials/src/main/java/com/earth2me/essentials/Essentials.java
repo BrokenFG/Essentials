@@ -118,6 +118,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -147,6 +150,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -555,6 +559,34 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
             if (getSettings().isDebug()) {
                 LOGGER.log(Level.INFO, "Essentials load " + timeroutput);
             }
+            final Map<String, BossBar> bossBars = new HashMap<>();
+            final List<String> commandTimers = Arrays.asList("god", "fly", "socialspy", "speed");
+            scheduleSyncRepeatingTask(() -> {
+                for (final User user : getOnlineUsers()) {
+                    for (String command : commandTimers) {
+                        final long disableAt = user.checkTimer(command);
+                        if (disableAt > 0) {
+                            final long timeLeft = (disableAt - System.currentTimeMillis()) / 1000;
+                            final BossBar bossBar;
+                            if (bossBars.containsKey(user.getName() + command)) {
+                                bossBar = bossBars.get(user.getName() + command);
+                            } else {
+                                bossBar = Bukkit.createBossBar(settings.getConfiguration().getString("timers." + command + ".title", "").replace("&", "§").replace("%time%", String.valueOf(timeLeft)), BarColor.GREEN, BarStyle.SOLID);
+                            }
+                            bossBar.addPlayer(user.getBase());
+                            bossBar.setTitle(settings.getConfiguration().getString("timers." + command + ".title", "").replace("&", "§").replace("%time%", String.valueOf(timeLeft)));
+                            bossBar.setProgress((double) timeLeft / settings.getConfiguration().getInt("timers." + command + ".timer", 0));
+                            if (!bossBar.isVisible()) bossBar.setVisible(true);
+                            bossBars.put(user.getName() + command, bossBar);
+                        } else {
+                            if (bossBars.containsKey(user.getName() + command)) {
+                                bossBars.get(user.getName() + command).setVisible(false);
+                                bossBars.remove(user.getName() + command);
+                            }
+                        }
+                    }
+                }
+            }, 20, 20);
         } catch (final NumberFormatException ex) {
             handleCrash(ex);
         } catch (final Error ex) {
@@ -713,7 +745,7 @@ public class Essentials extends JavaPlugin implements net.ess3.api.IEssentials {
     @Override
     public List<String> onTabComplete(final CommandSender sender, final Command command, final String commandLabel, final String[] args) {
         return onTabCompleteEssentials(sender, command, commandLabel, args, Essentials.class.getClassLoader(),
-            "com.earth2me.essentials.commands.Command", "essentials.", null);
+                "com.earth2me.essentials.commands.Command", "essentials.", null);
     }
 
     @Override

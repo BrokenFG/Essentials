@@ -26,6 +26,7 @@ public class Commandfly extends EssentialsToggleCommand {
         if (enabled == null) {
             enabled = !user.getBase().getAllowFlight();
         }
+        if (checkCooldown(sender, user)) return;
 
         final FlyStatusChangeEvent event = new FlyStatusChangeEvent(user, sender.isPlayer() ? ess.getUser(sender.getPlayer()) : null, enabled);
         ess.getServer().getPluginManager().callEvent(event);
@@ -42,6 +43,7 @@ public class Commandfly extends EssentialsToggleCommand {
             if (!sender.isPlayer() || !sender.getPlayer().equals(user.getBase())) {
                 sender.sendTl("flyMode", CommonPlaceholders.enableDisable(user.getSource(), enabled), user.getDisplayName());
             }
+            startCooldown(sender, user);
         }
     }
 }

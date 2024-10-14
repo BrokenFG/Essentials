@@ -25,6 +25,7 @@ public class Commandsocialspy extends EssentialsToggleCommand {
         if (enabled == null) {
             enabled = !user.isSocialSpyEnabled();
         }
+        checkCooldown(sender, user);
 
         user.setSocialSpyEnabled(enabled);
 
@@ -32,5 +33,6 @@ public class Commandsocialspy extends EssentialsToggleCommand {
         if (!sender.isPlayer() || !sender.getPlayer().equals(user.getBase())) {
             sender.sendTl("socialSpy", user.getDisplayName(), CommonPlaceholders.enableDisable(user.getSource(), enabled));
         }
+        startCooldown(sender, user);
     }
 }
