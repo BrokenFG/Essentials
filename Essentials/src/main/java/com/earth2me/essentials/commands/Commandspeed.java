@@ -53,6 +53,7 @@ public class Commandspeed extends EssentialsCommand {
         }
 
         if (checkCooldown(user, "speed.self")) return;
+        startCooldown(user, "speed.self");
 
         if (isFly) {
             user.getBase().setFlySpeed(getRealMoveSpeed(speed, true, isBypass));
