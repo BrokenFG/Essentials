@@ -25,7 +25,9 @@ public class Commandsocialspy extends EssentialsToggleCommand {
         if (enabled == null) {
             enabled = !user.isSocialSpyEnabled();
         }
-        checkCooldown(sender, user);
+        if (checkCooldown(sender, user)) {
+            return;
+        }
 
         user.setSocialSpyEnabled(enabled);
 
