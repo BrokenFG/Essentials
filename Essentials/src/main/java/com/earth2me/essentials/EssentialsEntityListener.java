@@ -70,6 +70,13 @@ public class EssentialsEntityListener implements Listener {
                 onPlayerVsPlayerDamage(event, (Player) eDefend, attacker);
                 attacker.updateActivityOnInteract(true);
             }
+        } else if (eDefend instanceof Player) {
+            if (ess.getUser((Player) eDefend).isGodModeEnabled()) {
+                final Player player = (Player) event.getEntity();
+                player.setFireTicks(0);
+                player.setRemainingAir(player.getMaximumAir());
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -116,16 +123,6 @@ public class EssentialsEntityListener implements Listener {
                     return;
                 }
             }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onEntityDamage(final EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player && ess.getUser((Player) event.getEntity()).isGodModeEnabled()) {
-            final Player player = (Player) event.getEntity();
-            player.setFireTicks(0);
-            player.setRemainingAir(player.getMaximumAir());
-            event.setCancelled(true);
         }
     }
 
