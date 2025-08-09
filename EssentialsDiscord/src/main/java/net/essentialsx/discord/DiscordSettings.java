@@ -9,10 +9,12 @@ import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Role;
 import net.essentialsx.api.v2.ChatType;
+import net.essentialsx.discord.util.MessageUtil;
 import org.apache.logging.log4j.Level;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.lang.management.ManagementFactory;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,6 +50,7 @@ public class DiscordSettings implements IConf {
     private MessageFormat permMuteReasonFormat;
     private MessageFormat unmuteFormat;
     private MessageFormat kickFormat;
+    private MessageFormat pmToDiscordFormat;
 
     public DiscordSettings(EssentialsDiscord plugin) {
         this.plugin = plugin;
@@ -197,6 +200,16 @@ public class DiscordSettings implements IConf {
 
     public boolean isShowDisplayName() {
         return config.getBoolean("show-displayname", false);
+    }
+
+    protected boolean isCustomBotName() {
+        if (isShowName() || isShowDisplayName()) {
+            return true;
+        }
+
+        final String format = getFormatString("mc-to-discord-name-format");
+
+        return format != null && !format.isEmpty() && !format.equals("{botname}");
     }
 
     public String getAvatarURL() {
@@ -427,7 +440,12 @@ public class DiscordSettings implements IConf {
     }
 
     public String getStartMessage() {
-        return config.getString("messages.server-start", ":white_check_mark: The server has started!");
+        final MessageFormat format = generateMessageFormat(getFormatString("server-start"), ":white_check_mark: The server has started in {starttimeseconds} seconds!", false,
+                "starttimeseconds");
+        return MessageUtil.formatMessage(format,
+                // measures time since the JVM started and converts it to seconds
+                String.format("%.2f", (float)Math.abs(ManagementFactory.getRuntimeMXBean().getStartTime() - System.currentTimeMillis()) / 1000)
+        );
     }
 
     public String getStopMessage() {
@@ -436,6 +454,10 @@ public class DiscordSettings implements IConf {
 
     public MessageFormat getKickFormat() {
         return kickFormat;
+    }
+
+    public MessageFormat getPmToDiscordFormat() {
+        return pmToDiscordFormat;
     }
 
     private String getFormatString(String node) {
@@ -574,6 +596,8 @@ public class DiscordSettings implements IConf {
                 "username", "displayname", "controllername", "controllerdisplayname", "reason");
         kickFormat = generateMessageFormat(getFormatString("kick"), "{displayname} was kicked with reason: {reason}", false,
                 "username", "displayname", "reason");
+        pmToDiscordFormat = generateMessageFormat(getFormatString("private-chat"), "[SocialSpy] {sender-username} -> {receiver-username}: {message}", false,
+                "sender-username", "sender-displayname", "receiver-username", "receiver-displayname", "message");
 
         plugin.onReload();
     }

@@ -50,7 +50,16 @@ public enum Mob {
     WITHER("Wither", Enemies.ENEMY, EntityType.WITHER),
     BAT("Bat", Enemies.FRIENDLY, EntityType.BAT),
     WITCH("Witch", Enemies.ENEMY, EntityType.WITCH),
-    BOAT("Boat", Enemies.NEUTRAL, EntityType.BOAT),
+    BOAT("Boat", Enemies.NEUTRAL, MobCompat.OAK_BOAT),
+    ACACIA_BOAT("AcaciaBoat", Enemies.NEUTRAL, "ACACIA_BOAT"),
+    DARK_OAK_BOAT("DarkOakBoat", Enemies.NEUTRAL, "DARK_OAK_BOAT"),
+    BIRCH_BOAT("BirchBoat", Enemies.NEUTRAL, "BIRCH_BOAT"),
+    JUNGLE_BOAT("JungleBoat", Enemies.NEUTRAL, "JUNGLE_BOAT"),
+    SPRUCE_BOAT("SpruceBoat", Enemies.NEUTRAL, "SPRUCE_BOAT"),
+    MANGROVE_BOAT("MangroveBoat", Enemies.NEUTRAL, "MANGROVE_BOAT"),
+    CHERRY_BOAT("CherryBoat", Enemies.NEUTRAL, "CHERRY_BOAT"),
+    BAMBOO_RAFT("BambooRaft", Enemies.NEUTRAL, "BAMBOO_RAFT"),
+    PALE_OAK_BOAT("PaleOakBoat", Enemies.NEUTRAL, "PALE_OAK_BOAT"),
     MINECART("Minecart", Enemies.NEUTRAL, EntityType.MINECART),
     MINECART_CHEST("ChestMinecart", Enemies.NEUTRAL, MobCompat.CHEST_MINECART),
     MINECART_FURNACE("FurnaceMinecart", Enemies.NEUTRAL, MobCompat.FURNACE_MINECART),
@@ -115,6 +124,8 @@ public enum Mob {
     ARMADILLO("Armadillo", Enemies.FRIENDLY, "ARMADILLO"),
     BREEZE("Breeze", Enemies.ENEMY, "BREEZE"),
     BOGGED("Bogged", Enemies.ENEMY, "BOGGED"),
+    CREAKING("Creaking", Enemies.ENEMY, "CREAKING"),
+    HAPPY_GHAST("HappyGhast", Enemies.FRIENDLY, "HAPPY_GHAST")
     ;
 
     private static final Map<String, Mob> hashMap = new HashMap<>();

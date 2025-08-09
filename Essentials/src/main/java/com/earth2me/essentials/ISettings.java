@@ -4,6 +4,7 @@ import com.earth2me.essentials.commands.IEssentialsCommand;
 import com.earth2me.essentials.config.EssentialsConfiguration;
 import com.earth2me.essentials.signs.EssentialsSign;
 import com.earth2me.essentials.textreader.IText;
+import net.essentialsx.api.v2.ChatType;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import org.bukkit.Material;
 import org.bukkit.event.EventPriority;
@@ -40,6 +41,8 @@ public interface ISettings extends IConf {
 
     String getChatFormat(String group);
 
+    String getChatFormat(String group, ChatType chatType);
+
     String getWorldAlias(String world);
 
     int getChatRadius();
@@ -55,6 +58,8 @@ public interface ISettings extends IConf {
     boolean isPersistShout();
 
     boolean isChatQuestionEnabled();
+
+    boolean isUsePaperChatEvent();
 
     BigDecimal getCommandCost(IEssentialsCommand cmd);
 
@@ -103,11 +108,17 @@ public interface ISettings extends IConf {
 
     List<Material> getProtectList(final String configName);
 
+    List<String> getProtectListRaw(final String configName);
+
     boolean getProtectPreventSpawn(final String creatureName);
 
     String getProtectString(final String configName);
 
     boolean getRespawnAtHome();
+
+    String getRandomSpawnLocation();
+
+    String getRandomRespawnLocation();
 
     boolean isRespawnAtAnchor();
 
@@ -176,6 +187,8 @@ public interface ISettings extends IConf {
 
     boolean isEcoLogEnabled();
 
+    boolean isEcoLogUUIDEnabled();
+
     boolean isEcoLogUpdateEnabled();
 
     boolean realNamesOnList();
@@ -200,7 +213,9 @@ public interface ISettings extends IConf {
 
     long getAutoAfk();
 
-    long getAutoAfkKick();
+    long getAutoAfkTimeout();
+
+    Set<String> getAfkTimeoutCommands();
 
     boolean getFreezeAfkPlayers();
 
@@ -308,6 +323,8 @@ public interface ISettings extends IConf {
 
     boolean isCustomServerFullMessage();
 
+    boolean isCustomWhitelistMessage();
+
     boolean isNotifyNoNewMail();
 
     boolean isDropItemsIfFull();
@@ -339,6 +356,8 @@ public interface ISettings extends IConf {
     boolean isCommandCooldownsEnabled();
 
     boolean isWorldChangeFlyResetEnabled();
+
+    boolean isWorldChangePreserveFlying();
 
     boolean isWorldChangeSpeedResetEnabled();
 
@@ -414,11 +433,19 @@ public interface ISettings extends IConf {
 
     boolean showZeroBaltop();
 
+    String getNickRegex();
+
+    BigDecimal getMultiplier(final User user);
+
     int getMaxItemLore();
 
     Tag getPrimaryColor();
 
     Tag getSecondaryColor();
+
+    BigDecimal getBaltopMinBalance();
+
+    long getBaltopMinPlaytime();
 
     enum KeepInvPolicy {
         KEEP,

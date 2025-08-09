@@ -10,6 +10,11 @@ on:
     - 2.x
     - mc/*
     - dev/*
+  merge_group:
+    types: [checks_requested]
+
+permissions:
+  checks: write
 
 jobs:
   build:
@@ -29,7 +34,7 @@ jobs:
         java-version: 17
 
     - name: Setup Gradle
-      uses: gradle/gradle-build-action@v3
+      uses: gradle/actions/setup-gradle@v4
 
     - name: Build with Gradle
       run: |

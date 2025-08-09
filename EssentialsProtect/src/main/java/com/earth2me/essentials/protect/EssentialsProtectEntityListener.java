@@ -3,7 +3,6 @@ package com.earth2me.essentials.protect;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import org.bukkit.Material;
-import org.bukkit.entity.AbstractWindCharge;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderCrystal;
 import org.bukkit.entity.EnderDragon;
@@ -181,7 +180,7 @@ public class EssentialsProtectEntityListener implements Listener {
         } else if (entity instanceof TNTPrimed && prot.getSettingBool(ProtectConfig.prevent_tnt_explosion)) {
             event.setCancelled(true);
 
-        } else if (entity instanceof Fireball && !(entity instanceof AbstractWindCharge) && prot.getSettingBool(ProtectConfig.prevent_fireball_explosion)) {
+        } else if (entity instanceof Fireball && !entity.getClass().getSimpleName().equals("CraftWindCharge") && prot.getSettingBool(ProtectConfig.prevent_fireball_explosion)) {
             event.setCancelled(true);
 
         } else if ((entity instanceof WitherSkull) && prot.getSettingBool(ProtectConfig.prevent_witherskull_explosion)) {
